@@ -14,6 +14,12 @@ categories = ["command-line-interface", "hardware-support"]
 [lints]
 workspace = true
 
+[features]
+default = ["udev"]
+# Forwards rtcom-core's optional libudev-backed enumeration. Turn both off
+# together with `--no-default-features` for minimal Linux targets.
+udev = ["rtcom-core/udev"]
+
 [dependencies]
 rtcom-core = { workspace = true }
 rtcom-config = { workspace = true }

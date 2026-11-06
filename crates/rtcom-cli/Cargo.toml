@@ -18,6 +18,14 @@ path = "src/main.rs"
 [lints]
 workspace = true
 
+[features]
+default = ["udev"]
+# Build without libudev (the only non-libc Linux system dependency).
+# `cargo build -p rtcom-cli --no-default-features --target
+# armv7-unknown-linux-gnueabihf` produces a binary that links nothing
+# beyond libc.
+udev = ["rtcom-core/udev", "rtcom-tui/udev"]
+
 [dependencies]
 rtcom-core = { workspace = true }
 rtcom-config = { workspace = true }

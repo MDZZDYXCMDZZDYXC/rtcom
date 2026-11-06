@@ -70,6 +70,26 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y libudev-dev pkg-config socat
       - run: cargo test --workspace --all-features
 
+  minimal-armv7:
+    name: minimal ARMv7 (no libudev)
+    runs-on: ubuntu-latest
+    needs: fmt
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: "1.88"
+          targets: armv7-unknown-linux-gnueabihf
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: minimal-armv7
+      # Deliberately no libudev-dev / pkg-config here: `--no-default-features`
+      # must build with libc as the only Linux system dependency. This job
+      # is the regression guard for the `udev` feature split.
+      - run: >-
+          cargo check --release -p rtcom-cli
+          --target armv7-unknown-linux-gnueabihf --no-default-features
+
   doc:
     name: rustdoc
     runs-on: ubuntu-latest

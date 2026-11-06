@@ -12,7 +12,11 @@ authors = ["TrekMax"]
 
 [workspace.dependencies]
 tokio = { version = "1", features = ["full"] }
-serialport = "4"
+# `default-features = false` drops the implicit `libudev` feature. udev is
+# only useful for richer port enumeration on glibc Linux; leaving it off
+# keeps the default dependency set free of any system library. Individual
+# crates re-enable it via their own `udev` feature.
+serialport = { version = "4", default-features = false }
 tokio-serial = "5.4"
 tokio-util = { version = "0.7", features = ["rt"] }
 nix = { version = "0.29", default-features = false, features = ["signal"] }
@@ -34,9 +38,9 @@ tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 bytes = "1"
 futures = "0.3"
-rtcom-core = { path = "crates/rtcom-core", version = "0.2.1" }
+rtcom-core = { path = "crates/rtcom-core", version = "0.2.1", default-features = false }
 rtcom-config = { path = "crates/rtcom-config", version = "0.2.1" }
-rtcom-tui = { path = "crates/rtcom-tui", version = "0.2.1" }
+rtcom-tui = { path = "crates/rtcom-tui", version = "0.2.1", default-features = false }
 
 [workspace.lints.rust]
 unsafe_code = "deny"

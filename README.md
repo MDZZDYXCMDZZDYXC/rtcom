@@ -100,8 +100,26 @@ cd rtcom
 cargo install --path crates/rtcom-cli --locked
 ```
 
-On Linux you'll need `libudev-dev` (or the equivalent package on your
-distro) for the underlying `serialport` crate.
+On Linux the default build enables the `udev` feature, so you'll need
+`libudev-dev` (or the equivalent package on your distro) for the
+underlying `serialport` crate. This is also true when cross-compiling to
+glibc targets such as `aarch64-unknown-linux-gnu` — see `Cross.toml`.
+
+#### Minimal Linux builds (ARMv7 and friends)
+
+If the target has no `libudev` (small ARMv7 appliances, static musl
+images, Yocto builds, …), disable the default features:
+
+```bash
+cargo build --release -p rtcom-cli --no-default-features \
+    --target armv7-unknown-linux-gnueabihf
+```
+
+With `--no-default-features` the binary links only against libc — no
+`libudev`, no `pkg-config` at build time. Opening a device by path works
+exactly as before; port enumeration falls back to scanning
+`/sys/class/tty` (without the extra USB vid/pid metadata that udev
+provides). Add `--features udev` if you want that metadata back.
 
 ### Pre-built binaries
 

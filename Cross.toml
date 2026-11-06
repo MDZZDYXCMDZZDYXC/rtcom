@@ -4,6 +4,19 @@
 # udev development headers in the *target* architecture. The default
 # cross images ship the host arch only, so we add the foreign arch +
 # install libudev-dev:<arch> before the build.
+#
+# This applies only when the `udev` feature is enabled (it is part of
+# `rtcom-cli`'s default features). For minimal targets build with
+# `--no-default-features` and libudev is never referenced:
+#
+#   cross build --release -p rtcom-cli \
+#       --target armv7-unknown-linux-gnueabihf --no-default-features
+#
+# No pre-build hook is defined for ARMv7 on purpose: installing
+# libudev-dev would reintroduce the exact system dependency the
+# `--no-default-features` build is meant to avoid. If you do want USB
+# enumeration metadata on ARMv7, install libudev-dev:armhf in your
+# image and add `--features udev`.
 [target.aarch64-unknown-linux-gnu]
 pre-build = [
     "dpkg --add-architecture $CROSS_DEB_ARCH",

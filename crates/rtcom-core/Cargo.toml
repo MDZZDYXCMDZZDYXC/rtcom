@@ -14,6 +14,15 @@ categories = ["asynchronous", "embedded", "hardware-support"]
 [lints]
 workspace = true
 
+[features]
+default = ["udev"]
+# Pulls in `libudev` (glibc Linux only) for USB-aware port enumeration.
+# Disable with `--no-default-features` on minimal targets such as ARMv7
+# appliances or static musl builds where libudev is unavailable: opening a
+# device by path still works, and port enumeration falls back to scanning
+# `/sys/class/tty` (no USB metadata).
+udev = ["serialport/libudev", "tokio-serial/libudev"]
+
 [dependencies]
 bytes = { workspace = true }
 serialport = { workspace = true }

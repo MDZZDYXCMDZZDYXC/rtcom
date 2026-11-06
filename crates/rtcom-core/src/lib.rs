@@ -13,6 +13,17 @@
 //! command state machine on top of this foundation. See `CLAUDE.md` §7 for
 //! the full v0.1 plan.
 //!
+//! # Cargo features
+//!
+//! - **`udev`** (default) — enables `serialport`'s `libudev` backend on
+//!   glibc Linux for USB-aware port enumeration. It is the only non-libc
+//!   system dependency in the dependency tree.
+//!
+//! Build with `--no-default-features` for minimal Linux targets (ARMv7
+//! appliances, static musl, Yocto) where `libudev` is not available.
+//! Opening a device by path is unaffected; port enumeration falls back to
+//! scanning `/sys/class/tty`.
+//!
 //! # Example
 //!
 //! ```no_run
